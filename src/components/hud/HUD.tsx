@@ -10,85 +10,93 @@ interface HUDProps {
     level: number;
     onMissions: () => void;
     onTutorial: () => void;
+    currentObjective?: string;
 }
 
-export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount, score, level, onMissions, onTutorial }: HUDProps) {
+export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount, score, level, onMissions, onTutorial, currentObjective }: HUDProps) {
     const congestionLevel = Math.min(vehicleCount / 25, 1);
     const congestionColor = congestionLevel > 0.7 ? "#FF3366" : congestionLevel > 0.4 ? "#FFD600" : "#00E676";
 
     return (
-        <div className="absolute inset-0 pointer-events-none z-10">
-            {/* Top bar */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
-                {/* Left controls */}
-                <div className="pointer-events-auto flex gap-2 bg-black/60 backdrop-blur-xl p-2 rounded-2xl border border-cyan-500/30">
-                    <button
-                        onClick={onRushHour}
-                        className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-sm transition-all ${isRushHour
-                            ? "bg-orange-500 text-white shadow-[0_0_20px_rgba(255,165,0,0.5)] animate-pulse"
-                            : "bg-white/10 text-cyan-400 hover:bg-white/20"
-                            }`}
-                    >
-                        <Activity size={18} />
-                        <span className="hidden sm:inline">{isRushHour ? "🔥 RUSH HOUR" : "Rush Hour"}</span>
-                    </button>
-                    <button className="flex items-center gap-2 px-4 py-2.5 bg-white/10 text-cyan-400 hover:bg-white/20 rounded-xl font-bold text-sm transition-all">
-                        <Zap size={18} />
-                        <span className="hidden sm:inline">Signal Scope</span>
-                    </button>
-                    <button
-                        onClick={onMissions}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 rounded-xl font-bold text-sm transition-all"
-                    >
-                        <Target size={18} />
-                        <span className="hidden sm:inline">Missions</span>
-                    </button>
-                </div>
+        <div className="absolute inset-0 z-40 pointer-events-none">
+            <div className="absolute inset-0 flex flex-col justify-between p-4">
+                {/* Top row */}
+                <div className="flex items-start justify-between">
+                    {/* Left controls */}
+                    <div className="pointer-events-auto flex flex-col gap-2">
+                        <button
+                            onClick={onRushHour}
+                            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border font-bold text-sm transition-all ${isRushHour
+                                    ? "bg-orange-500/30 border-orange-400/50 text-orange-300 shadow-[0_0_20px_rgba(255,152,0,0.3)]"
+                                    : "bg-black/60 border-white/10 text-white/80 hover:bg-white/10 backdrop-blur-xl"
+                                }`}
+                        >
+                            <Zap size={16} /> Rush Hour
+                        </button>
 
-                {/* Center: Score */}
-                <div className="pointer-events-auto bg-black/60 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-yellow-500/30 flex items-center gap-3">
-                    <Trophy size={18} className="text-yellow-400" />
-                    <div>
-                        <p className="text-xs font-bold text-yellow-400">{score} XP</p>
-                        <p className="text-[10px] text-white/40">Level {level}</p>
+                        <button
+                            onClick={onEmergency}
+                            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-red-500/20 border border-red-400/30 text-red-300 font-bold text-sm hover:bg-red-500/30 transition-all backdrop-blur-xl shadow-[0_0_15px_rgba(255,51,102,0.15)]"
+                        >
+                            <ShieldAlert size={16} /> 🚨 Emergency
+                        </button>
                     </div>
-                </div>
 
-                {/* Right: Emergency */}
-                <div className="pointer-events-auto bg-black/60 backdrop-blur-xl p-2 rounded-2xl border border-red-500/30">
-                    <button
-                        onClick={onEmergency}
-                        className="flex items-center gap-2 px-4 py-2.5 bg-red-500/30 hover:bg-red-500/50 text-red-400 hover:text-white rounded-xl font-bold text-sm transition-all hover:shadow-[0_0_20px_rgba(255,51,102,0.5)]"
-                    >
-                        <ShieldAlert size={18} />
-                        <span className="hidden sm:inline">🚨 Emergency</span>
-                    </button>
-                </div>
-            </div>
-
-            {/* Bottom HUD */}
-            <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
-                <div className="pointer-events-auto bg-black/60 backdrop-blur-xl p-4 rounded-2xl border border-white/10 min-w-[260px]">
-                    <div className="text-xs font-bold text-white/50 uppercase tracking-widest mb-2">City Traffic Health</div>
-                    <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
-                        <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{ width: `${(1 - congestionLevel) * 100}%`, backgroundColor: congestionColor, boxShadow: `0 0 10px ${congestionColor}` }}
-                        />
+                    {/* Center — Score + Level */}
+                    <div className="pointer-events-auto bg-black/60 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10 text-center">
+                        <div className="flex items-center gap-2 justify-center">
+                            <Trophy size={16} className="text-yellow-400" />
+                            <span className="text-yellow-400 font-black text-lg">{score} XP</span>
+                        </div>
+                        <p className="text-[11px] text-white/40 font-mono">Level {level}</p>
                     </div>
-                    <div className="flex justify-between mt-1.5">
-                        <span className="text-xs font-mono text-white/40">Vehicles: {vehicleCount}</span>
-                        <span className="text-xs font-bold" style={{ color: congestionColor }}>
-                            {congestionLevel > 0.7 ? "🔴 GRIDLOCK" : congestionLevel > 0.4 ? "🟡 BUSY" : "🟢 CLEAR"}
-                        </span>
-                    </div>
+
+                    {/* Right — empty for signal panel space */}
+                    <div className="w-[140px]" />
                 </div>
 
-                <div className="pointer-events-auto flex items-center gap-2 bg-black/60 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
-                    <p className="text-xs text-white/40 font-medium">🖱️ Orbit • 🔍 Scroll zoom • 🚦 Click signals</p>
-                    <button onClick={onTutorial} className="ml-2 text-white/40 hover:text-cyan-400 transition-colors" title="Replay Tutorial">
-                        <HelpCircle size={18} />
-                    </button>
+                {/* Current mission objective */}
+                {currentObjective && (
+                    <div className="absolute top-20 left-1/2 -translate-x-1/2 pointer-events-none">
+                        <div className="bg-black/60 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-cyan-500/30">
+                            <div className="flex items-center gap-2">
+                                <Target size={14} className="text-cyan-400" />
+                                <p className="text-xs text-cyan-300/80 font-medium">{currentObjective}</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Bottom row */}
+                <div className="flex items-end justify-between">
+                    {/* Traffic health */}
+                    <div className="pointer-events-auto bg-black/60 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
+                        <div className="flex items-center gap-3">
+                            <Activity size={16} className="text-white/60" />
+                            <div>
+                                <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div
+                                        className="h-full rounded-full transition-all duration-500"
+                                        style={{ width: `${congestionLevel * 100}%`, background: congestionColor }}
+                                    />
+                                </div>
+                                <div className="flex justify-between mt-1">
+                                    <span className="text-[10px] text-white/30 font-mono">Vehicles: {vehicleCount}</span>
+                                    <span className="text-[10px] font-bold" style={{ color: congestionColor }}>
+                                        {congestionLevel > 0.7 ? "● GRIDLOCK" : congestionLevel > 0.4 ? "● BUSY" : "● CLEAR"}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Controls hint */}
+                    <div className="pointer-events-auto flex items-center gap-2 bg-black/60 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
+                        <p className="text-xs text-white/40 font-medium">🖱️ Orbit • 🔍 Scroll zoom • 🚦 Click signals</p>
+                        <button onClick={onTutorial} className="ml-2 text-white/40 hover:text-cyan-400 transition-colors" title="Replay Intro">
+                            <HelpCircle size={18} />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
