@@ -30,10 +30,11 @@ export default function TrafficLight({
     controlsAxis,
 }: TrafficLightProps) {
     const [state, setState] = useState<SignalState>(initialState);
+    const stateRef = useRef<SignalState>(initialState);
     const configRef = useRef<TrafficLightConfig>(config);
     const timerRef = useRef(initialState === "GREEN" ? config.greenDuration : config.redDuration);
 
-    // When config prop changes (user clicks Apply), update the ref immediately
+    // Update config ref when props change
     useEffect(() => {
         configRef.current = config;
     }, [config]);
@@ -41,21 +42,22 @@ export default function TrafficLight({
     useFrame((_, delta) => {
         timerRef.current -= delta;
         if (timerRef.current <= 0) {
-            let newState: SignalState;
-            if (state === "GREEN") {
-                newState = "YELLOW";
+            let next: SignalState;
+            if (stateRef.current === "GREEN") {
+                next = "YELLOW";
                 timerRef.current = configRef.current.yellowDuration;
-            } else if (state === "YELLOW") {
-                newState = "RED";
+            } else if (stateRef.current === "YELLOW") {
+                next = "RED";
                 timerRef.current = configRef.current.redDuration;
             } else {
-                newState = "GREEN";
+                next = "GREEN";
                 timerRef.current = configRef.current.greenDuration;
             }
-            setState(newState);
+            stateRef.current = next;
+            setState(next);
         }
         // Push state to global store for vehicles
-        trafficStore.updateSignal(signalId, { position, state, controlsAxis });
+        trafficStore.updateSignal(signalId, { position, state: stateRef.current, controlsAxis });
     });
 
     const lightColors: Record<SignalState, string> = {

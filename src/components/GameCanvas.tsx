@@ -45,19 +45,42 @@ interface GameCanvasProps {
     droneAlert: boolean;
     sparkEmotion: string;
     onSignalClick: (id: string) => void;
+    currentMissionIndex: number;
+    phase: string;
 }
 
 export default function GameCanvas({
     isRushHour, vehicleCount, emergencyVehicles, signalConfigs,
-    droneMessage, droneAlert, sparkEmotion, onSignalClick,
+    droneMessage, droneAlert, sparkEmotion, onSignalClick, currentMissionIndex, phase,
 }: GameCanvasProps) {
     const vehicles = Array.from({ length: vehicleCount }).map((_, i) => ({
-        id: i,
+        id: `car-${i}`,
         pathIndex: i % ROAD_PATHS.length,
         speed: 3 + ((i * 7 + 13) % 70) / 10, // deterministic per id
         color: CAR_COLORS[i % CAR_COLORS.length],
         startOffset: ((i * 37 + 11) % 80),
     }));
+
+    // Special stuck ambulance scenario for Mission 1
+    const missionScenario = (currentMissionIndex === 0 && (phase === "ACTIVE" || phase === "RULES" || phase === "BRIEFING")) ? [
+        {
+            id: "stuck-ambulance-target",
+            pathIndex: 0, // h-main
+            speed: 12,
+            color: "#FFFFFF",
+            isEmergency: true,
+            startOffset: 5, // Behind blocker cars
+        },
+        // 6 cars directly in front of the ambulance
+        ...Array.from({ length: 6 }).map((_, j) => ({
+            id: `mission-blocker-${j}`,
+            pathIndex: 0, // same path as ambulance
+            speed: 8,
+            color: CAR_COLORS[(j + 2) % CAR_COLORS.length],
+            isEmergency: false,
+            startOffset: 15 + j * 9, // Distribute ahead
+        }))
+    ] : [];
 
     return (
         <Canvas
@@ -121,6 +144,7 @@ export default function GameCanvas({
                 {vehicles.map(v => (
                     <Vehicle
                         key={v.id}
+                        vehicleId={v.id}
                         path={ROAD_PATHS[v.pathIndex].points}
                         speed={v.speed}
                         color={v.color}
@@ -128,9 +152,22 @@ export default function GameCanvas({
                     />
                 ))}
 
+                {missionScenario.map(v => (
+                    <Vehicle
+                        key={v.id}
+                        vehicleId={v.id}
+                        path={ROAD_PATHS[v.pathIndex].points}
+                        speed={v.speed}
+                        color={v.color}
+                        isEmergency={v.isEmergency}
+                        startOffset={v.startOffset}
+                    />
+                ))}
+
                 {emergencyVehicles.map((id, i) => (
                     <Vehicle
                         key={`emg-${id}`}
+                        vehicleId={`emg-${id}`}
                         path={ROAD_PATHS[i % ROAD_PATHS.length].points}
                         speed={14}
                         color="#FFFFFF"

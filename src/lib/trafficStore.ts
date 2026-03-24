@@ -12,6 +12,7 @@ export interface IntersectionState {
 
 class TrafficStateStore {
     private signals: Map<string, IntersectionState> = new Map();
+    private vehiclePositions: Map<string, [number, number, number]> = new Map();
 
     updateSignal(id: string, data: IntersectionState) {
         this.signals.set(id, data);
@@ -21,29 +22,66 @@ class TrafficStateStore {
         return this.signals;
     }
 
+    updateVehicle(id: string, x: number, z: number) {
+        this.vehiclePositions.set(id, [x, 0, z]);
+    }
+
+    removeVehicle(id: string) {
+        this.vehiclePositions.delete(id);
+    }
+
+    reset() {
+        this.vehiclePositions.clear();
+        this.signals.clear();
+    }
+
+    checkCollision(id: string, x: number, z: number, axis: "x" | "z", dir: number): boolean {
+        const checkRange = 6.0;
+        const sideMargin = 2.0;
+
+        for (const [vid, vpos] of Array.from(this.vehiclePositions)) {
+            if (vid === id) continue;
+            
+            const dx = vpos[0] - x;
+            const dz = vpos[2] - z;
+
+            // Check if vehicle is on the same path (side margin)
+            if (axis === "x") {
+                if (Math.abs(dz) > sideMargin) continue;
+                // Check if it's ahead
+                if (dir * dx > 0 && Math.abs(dx) < checkRange) return true;
+            } else {
+                if (Math.abs(dx) > sideMargin) continue;
+                // Check if it's ahead
+                if (dir * dz > 0 && Math.abs(dz) < checkRange) return true;
+            }
+        }
+        return false;
+    }
+
     // Check if a vehicle at position (x, z) traveling on a given axis should stop
-    shouldStop(x: number, z: number, travelAxis: "x" | "z"): { stop: boolean; slowDown: boolean } {
+    shouldStop(x: number, z: number, axis: "x" | "z", dir: number): { stop: boolean; slowDown: boolean } {
         for (const [, signal] of Array.from(this.signals)) {
+            if (signal.controlsAxis !== axis) continue;
+
             const sx = signal.position[0];
             const sz = signal.position[2];
 
-            // Check if vehicle is approaching this intersection
-            const distX = Math.abs(x - sx);
-            const distZ = Math.abs(z - sz);
-            const dist = Math.sqrt(distX * distX + distZ * distZ);
+            const dx = sx - x;
+            const dz = sz - z;
 
-            // Only check signals that control the vehicle's travel axis
-            if (dist < 8 && dist > 0.5) {
-                // Signal controls perpendicular traffic — if we're on the same axis as the signal controls
-                if (signal.controlsAxis === travelAxis) {
-                    if (signal.state === "RED") {
-                        // Stop within 3-6 units of intersection
-                        if (dist < 6) return { stop: true, slowDown: false };
-                        if (dist < 8) return { stop: false, slowDown: true };
-                    }
-                    if (signal.state === "YELLOW") {
-                        if (dist < 5) return { stop: false, slowDown: true };
-                    }
+            // Check if signal is in front relative to direction
+            const dist = axis === "x" ? dx : dz;
+            const absDist = Math.abs(dist);
+
+            // Signal is 'ahead' if dist * dir > 0
+            if (dir * dist > 0 && absDist < 10) {
+                if (signal.state === "RED") {
+                    if (absDist < 6) return { stop: true, slowDown: false };
+                    if (absDist < 9) return { stop: false, slowDown: true };
+                }
+                if (signal.state === "YELLOW" && absDist < 7) {
+                    return { stop: false, slowDown: true };
                 }
             }
         }
@@ -51,5 +89,4 @@ class TrafficStateStore {
     }
 }
 
-// Singleton
 export const trafficStore = new TrafficStateStore();

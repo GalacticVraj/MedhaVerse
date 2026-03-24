@@ -11,6 +11,7 @@ import MissionBriefing from "@/components/hud/MissionBriefing";
 import MissionComplete from "@/components/hud/MissionComplete";
 import InsightScreen from "@/components/hud/InsightScreen";
 import SparkDialogue from "@/components/hud/SparkDialogue";
+import GameRules from "@/components/hud/GameRules";
 import ToastContainer, { showToast } from "@/components/hud/ToastNotification";
 
 const GameCanvas = dynamic(() => import("@/components/GameCanvas"), { ssr: false });
@@ -137,6 +138,10 @@ export default function Home() {
     };
 
     const handleMissionStart = () => {
+        story.setPhase("RULES");
+    };
+
+    const handleRulesComplete = () => {
         story.startMission();
         if (story.currentMission) {
             showToast(`Mission Started: ${story.currentMission.title}`, "info", story.currentMission.icon);
@@ -165,6 +170,8 @@ export default function Home() {
                 droneAlert={droneAlert}
                 sparkEmotion={story.sparkEmotion}
                 onSignalClick={handleSignalClick}
+                currentMissionIndex={story.currentMissionIndex}
+                phase={story.phase}
             />
 
             {/* INTRO */}
@@ -181,6 +188,11 @@ export default function Home() {
                     totalMissions={STORY_MISSIONS.length}
                     onStart={handleMissionStart}
                 />
+            )}
+
+            {/* RULES POPUP */}
+            {story.phase === "RULES" && (
+                <GameRules onStart={handleRulesComplete} />
             )}
 
             {/* ACTIVE / FREE PLAY — full game controls */}
@@ -224,3 +236,4 @@ export default function Home() {
         </div>
     );
 }
+

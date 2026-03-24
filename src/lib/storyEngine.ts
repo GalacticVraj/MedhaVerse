@@ -3,7 +3,7 @@
 
 import { useState, useCallback } from "react";
 
-export type GamePhase = "INTRO" | "BRIEFING" | "ACTIVE" | "COMPLETE" | "INSIGHT" | "FREE_PLAY";
+export type GamePhase = "INTRO" | "BRIEFING" | "RULES" | "ACTIVE" | "COMPLETE" | "INSIGHT" | "FREE_PLAY";
 
 export type SparkEmotion = "happy" | "worried" | "alert" | "celebrating" | "curious";
 
