@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { CheckCircle, AlertTriangle, Zap, Info, X } from "lucide-react";
+import { CheckCircle, AlertTriangle, Zap, Info, X, LucideIcon } from "lucide-react";
 
 export type ToastType = "success" | "warning" | "alert" | "info";
 
@@ -11,7 +11,7 @@ interface Toast {
     icon?: string;
 }
 
-const TYPE_CONFIG: Record<ToastType, { bg: string; border: string; text: string; glow: string; Icon: React.ElementType }> = {
+const TYPE_CONFIG: Record<ToastType, { bg: string; border: string; text: string; glow: string; Icon: LucideIcon }> = {
     success: { bg: "from-emerald-500/20 to-emerald-900/40", border: "border-emerald-400/40", text: "text-emerald-300", glow: "shadow-[0_0_30px_rgba(0,200,100,0.2)]", Icon: CheckCircle },
     warning: { bg: "from-orange-500/20 to-orange-900/40", border: "border-orange-400/40", text: "text-orange-300", glow: "shadow-[0_0_30px_rgba(255,152,0,0.2)]", Icon: AlertTriangle },
     alert: { bg: "from-red-500/20 to-red-900/40", border: "border-red-400/40", text: "text-red-300", glow: "shadow-[0_0_30px_rgba(255,51,102,0.2)]", Icon: AlertTriangle },
