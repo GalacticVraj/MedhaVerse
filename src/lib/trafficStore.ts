@@ -13,6 +13,7 @@ export interface IntersectionState {
 class TrafficStateStore {
     private signals: Map<string, IntersectionState> = new Map();
     private vehiclePositions: Map<string, [number, number, number]> = new Map();
+    private vehicleStats: Map<string, { axis: "x" | "z", isEmergency: boolean, waitSecs: number }> = new Map();
 
     updateSignal(id: string, data: IntersectionState) {
         this.signals.set(id, data);
@@ -28,11 +29,35 @@ class TrafficStateStore {
 
     removeVehicle(id: string) {
         this.vehiclePositions.delete(id);
+        this.vehicleStats.delete(id);
     }
 
     reset() {
         this.vehiclePositions.clear();
+        this.vehicleStats.clear();
         this.signals.clear();
+    }
+
+    updateVehicleStats(id: string, axis: "x" | "z", isEmergency: boolean, deltaWait: number) {
+        const existing = this.vehicleStats.get(id);
+        const newWait = existing ? existing.waitSecs + deltaWait : deltaWait;
+        this.vehicleStats.set(id, { axis, isEmergency, waitSecs: newWait });
+    }
+
+    getMetrics(axis: "x" | "z") {
+        let density = 0;
+        let waitTime = 0;
+        let ambulance = false;
+        
+        for (const [, v] of Array.from(this.vehicleStats)) {
+            if (v.axis === axis) {
+                density += 1;
+                waitTime += v.waitSecs;
+                if (v.isEmergency) ambulance = true;
+            }
+        }
+        
+        return { density, waitTime: Math.floor(waitTime), ambulance };
     }
 
     checkCollision(id: string, x: number, z: number, axis: "x" | "z", dir: number): boolean {

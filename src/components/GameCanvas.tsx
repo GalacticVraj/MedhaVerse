@@ -40,18 +40,18 @@ interface GameCanvasProps {
     isRushHour: boolean;
     vehicleCount: number;
     emergencyVehicles: number[];
-    signalConfigs: Record<string, { greenDuration: number; redDuration: number; yellowDuration: number }>;
+    manualSignals: { ns: "GREEN" | "RED" | "YELLOW", ew: "GREEN" | "RED" | "YELLOW" };
     droneMessage: string;
     droneAlert: boolean;
     sparkEmotion: string;
-    onSignalClick: (id: string) => void;
+    onAmbulanceFinish: (id: string) => void;
     currentMissionIndex: number;
     phase: string;
 }
 
 export default function GameCanvas({
-    isRushHour, vehicleCount, emergencyVehicles, signalConfigs,
-    droneMessage, droneAlert, sparkEmotion, onSignalClick, currentMissionIndex, phase,
+    isRushHour, vehicleCount, emergencyVehicles, manualSignals,
+    droneMessage, droneAlert, sparkEmotion, onAmbulanceFinish, currentMissionIndex, phase,
 }: GameCanvasProps) {
     const vehicles = Array.from({ length: vehicleCount }).map((_, i) => ({
         id: `car-${i}`,
@@ -61,8 +61,8 @@ export default function GameCanvas({
         startOffset: ((i * 37 + 11) % 80),
     }));
 
-    // Special stuck ambulance scenario for Mission 1
-    const missionScenario = (currentMissionIndex === 0 && (phase === "ACTIVE" || phase === "RULES" || phase === "BRIEFING")) ? [
+    // Special stuck ambulance scenario for every phase (to practice guiding the ambulance)
+    const missionScenario = (phase === "ACTIVE" || phase === "RULES" || phase === "BRIEFING") ? [
         {
             id: "stuck-ambulance-target",
             pathIndex: 0, // h-main
@@ -134,10 +134,8 @@ export default function GameCanvas({
                         signalId={sig.id}
                         position={sig.pos}
                         rotation={sig.rot}
-                        initialState={sig.init}
                         controlsAxis={sig.axis}
-                        config={signalConfigs[sig.id] || { greenDuration: 8, redDuration: 8, yellowDuration: 2 }}
-                        onClick={() => onSignalClick(sig.id)}
+                        manualState={sig.axis === "z" ? manualSignals.ns : manualSignals.ew}
                     />
                 ))}
 
@@ -161,6 +159,7 @@ export default function GameCanvas({
                         color={v.color}
                         isEmergency={v.isEmergency}
                         startOffset={v.startOffset}
+                        onFinish={onAmbulanceFinish}
                     />
                 ))}
 
@@ -173,6 +172,7 @@ export default function GameCanvas({
                         color="#FFFFFF"
                         isEmergency
                         startOffset={0}
+                        onFinish={onAmbulanceFinish}
                     />
                 ))}
 

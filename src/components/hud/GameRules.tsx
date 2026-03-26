@@ -26,8 +26,8 @@ export default function GameRules({ onStart }: GameRulesProps) {
                                 <MousePointer2 size={18} className="text-white/60" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-white">INTERACT</h3>
-                                <p className="text-xs text-white/40 leading-relaxed">Click on any traffic signal in the 3D view to open its control panel.</p>
+                                <h3 className="text-sm font-bold text-white">MANUAL CONTROL</h3>
+                                <p className="text-xs text-white/40 leading-relaxed">Use the N-S and E-W toggles to change the traffic lights between Green and Red.</p>
                             </div>
                         </div>
 
@@ -36,8 +36,8 @@ export default function GameRules({ onStart }: GameRulesProps) {
                                 <Zap size={18} className="text-orange-400/80" />
                             </div>
                             <div>
-                                <h3 className="text-sm font-bold text-white">CONFIGURE</h3>
-                                <p className="text-xs text-white/40 leading-relaxed">Adjust green and red phases to keep traffic flowing. Watch for "Gridlock" on the HUD.</p>
+                                <h3 className="text-sm font-bold text-white">AVOID COLLISION</h3>
+                                <p className="text-xs text-white/40 leading-relaxed">Never turn BOTH directions Green at the same time. This will trigger a critical collision failure.</p>
                             </div>
                         </div>
 

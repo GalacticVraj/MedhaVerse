@@ -11,15 +11,17 @@ interface VehicleProps {
     color?: string;
     isEmergency?: boolean;
     startOffset?: number;
+    onFinish?: (id: string) => void;
 }
 
-export default function Vehicle({ vehicleId, path, speed = 8, color = "#00E0FF", isEmergency = false, startOffset = 0 }: VehicleProps) {
+export default function Vehicle({ vehicleId, path, speed = 8, color = "#00E0FF", isEmergency = false, startOffset = 0, onFinish }: VehicleProps) {
     const groupRef = useRef<THREE.Group>(null);
     const progressRef = useRef(startOffset);
     const sirenTimeRef = useRef(0);
     const sirenRedMatRef = useRef<THREE.MeshStandardMaterial>(null);
     const sirenBlueMatRef = useRef<THREE.MeshStandardMaterial>(null);
     const currentSpeedRef = useRef(speed);
+    const finishedRef = useRef(false);
 
     // Clean up on unmount
     useEffect(() => {
@@ -45,12 +47,17 @@ export default function Vehicle({ vehicleId, path, speed = 8, color = "#00E0FF",
 
     useFrame((_, delta) => {
         if (!groupRef.current || path.length < 2) return;
+        if (finishedRef.current) return; // Completely stop logic once reached end
 
         // Get current position
         const pos = groupRef.current.position;
 
         // Update global store
         trafficStore.updateVehicle(vehicleId, pos.x, pos.z);
+        
+        // Report ML telemetry (stopped if speed is low)
+        const isStopped = currentSpeedRef.current < 2;
+        trafficStore.updateVehicleStats(vehicleId, travelAxis.current, isEmergency, isStopped ? delta : 0);
 
         // Check for collisions (directional)
         const isBlocked = trafficStore.checkCollision(vehicleId, pos.x, pos.z, travelAxis.current, travelDir.current);
@@ -85,22 +92,47 @@ export default function Vehicle({ vehicleId, path, speed = 8, color = "#00E0FF",
 
         const t = (progressRef.current % totalLength) / totalLength;
 
+        // Prevent emergency vehicles from looping and trigger finish
+        if (isEmergency && progressRef.current >= totalLength) {
+            if (onFinish && !finishedRef.current) {
+                finishedRef.current = true;
+                trafficStore.removeVehicle(vehicleId);
+                groupRef.current.visible = false;
+                onFinish(vehicleId);
+            }
+            return; // Stop moving
+        }
+
         let accumulated = 0;
+        let setPos = false; // Flag to ensure we don't skip frames due to floating point error
+
         for (let i = 1; i < path.length; i++) {
             const dx = path[i][0] - path[i - 1][0];
             const dz = path[i][2] - path[i - 1][2];
             const segLength = Math.sqrt(dx * dx + dz * dz);
-            const segT = (t * totalLength - accumulated) / segLength;
+            
+            // For emergency cars, we cap it at totalLength
+            const currentProgress = isEmergency ? Math.min(progressRef.current, totalLength) : (t * totalLength);
+            const segT = currentProgress - accumulated;
 
-            if (segT >= 0 && segT <= 1) {
-                const x = path[i - 1][0] + dx * segT;
-                const z = path[i - 1][2] + dz * segT;
+            const tSegment = segT / segLength;
+
+            if (tSegment >= -0.001 && tSegment <= 1.001) {
+                const clampedT = Math.max(0, Math.min(1, tSegment));
+                const x = path[i - 1][0] + dx * clampedT;
+                const z = path[i - 1][2] + dz * clampedT;
                 groupRef.current.position.set(x, path[i - 1][1], z);
                 const angle = Math.atan2(dx, dz);
                 groupRef.current.rotation.y = angle;
+                setPos = true;
                 break;
             }
             accumulated += segLength;
+        }
+        
+        // Fallback for floating point skip exactly around the end of the full loop
+        if (!setPos && path.length > 1 && !isEmergency) {
+            groupRef.current.position.set(path[0][0], path[0][1], path[0][2]);
         }
 
         // Emergency siren flash
