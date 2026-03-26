@@ -24,24 +24,24 @@ export default function CompanionDrone({ message = "Welcome, Engineer!", isAlert
     return (
         <Float speed={2} rotationIntensity={0.2} floatIntensity={1} floatingRange={[0, 0.5]}>
             <group ref={droneRef} position={[8, 6, 8]}>
-                {/* Drone body */}
+                {/* Drone body (Blocky) */}
                 <mesh castShadow>
-                    <sphereGeometry args={[0.4, 16, 16]} />
-                    <meshStandardMaterial color={bodyColor} roughness={0.3} metalness={0.7} emissive={bodyColor} emissiveIntensity={0.5} />
+                    <boxGeometry args={[0.6, 0.6, 0.6]} />
+                    <meshStandardMaterial color={bodyColor} roughness={1.0} emissive={bodyColor} emissiveIntensity={0.5} />
                 </mesh>
 
-                {/* Eye */}
-                <mesh position={[0, 0, 0.35]}>
-                    <sphereGeometry args={[0.15, 12, 12]} />
-                    <meshStandardMaterial color="#0A2540" roughness={0.1} metalness={0.9} />
+                {/* Eye (Blocky) */}
+                <mesh position={[0, 0, 0.31]}>
+                    <boxGeometry args={[0.25, 0.25, 0.05]} />
+                    <meshStandardMaterial color="#0A2540" roughness={1.0} />
                 </mesh>
 
-                {/* Arms + Propellers */}
+                {/* Arms + Propellers (Blocky) */}
                 {[[-0.6, 0, -0.6], [0.6, 0, -0.6], [-0.6, 0, 0.6], [0.6, 0, 0.6]].map((pos, i) => (
                     <group key={i}>
                         <mesh position={pos as [number, number, number]}>
-                            <cylinderGeometry args={[0.03, 0.03, 0.8]} />
-                            <meshStandardMaterial color="#555" metalness={0.8} />
+                            <boxGeometry args={[0.1, 0.1, 0.8]} />
+                            <meshStandardMaterial color="#555" roughness={1.0} />
                         </mesh>
                         <mesh ref={i === 0 ? propellerRef1 : i === 1 ? propellerRef2 : undefined} position={[pos[0], pos[1] + 0.15, pos[2]]}>
                             <boxGeometry args={[0.5, 0.02, 0.08]} />

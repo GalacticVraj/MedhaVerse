@@ -1,14 +1,15 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { SparkMessage, SparkEmotion } from "@/lib/storyEngine";
-import { Sparkles, AlertTriangle, Search, PartyPopper, Heart } from "lucide-react";
+import { Sparkles, AlertTriangle, Search, PartyPopper } from "lucide-react";
 
+// Remap all emotions to the palette
 const EMOTION_CONFIG: Record<SparkEmotion, { color: string; bgColor: string; borderColor: string; icon: React.ReactNode }> = {
-    happy: { color: "#00E0FF", bgColor: "rgba(0,224,255,0.1)", borderColor: "rgba(0,224,255,0.4)", icon: <Sparkles size={20} /> },
-    worried: { color: "#FF9800", bgColor: "rgba(255,152,0,0.1)", borderColor: "rgba(255,152,0,0.4)", icon: <AlertTriangle size={20} /> },
-    alert: { color: "#FF3366", bgColor: "rgba(255,51,102,0.1)", borderColor: "rgba(255,51,102,0.4)", icon: <AlertTriangle size={20} /> },
-    celebrating: { color: "#FFD600", bgColor: "rgba(255,214,0,0.1)", borderColor: "rgba(255,214,0,0.4)", icon: <PartyPopper size={20} /> },
-    curious: { color: "#AA66FF", bgColor: "rgba(170,102,255,0.1)", borderColor: "rgba(170,102,255,0.4)", icon: <Search size={20} /> },
+    happy:       { color: "#a3b878",  bgColor: "rgba(131,153,88,0.15)",   borderColor: "rgba(131,153,88,0.5)",   icon: <Sparkles size={20} /> },
+    worried:     { color: "#ccc9a0",  bgColor: "rgba(204,201,160,0.12)",  borderColor: "rgba(204,201,160,0.4)",  icon: <AlertTriangle size={20} /> },
+    alert:       { color: "#e8b5ad",  bgColor: "rgba(211,150,140,0.15)",  borderColor: "rgba(211,150,140,0.5)",  icon: <AlertTriangle size={20} /> },
+    celebrating: { color: "#D3968C",  bgColor: "rgba(211,150,140,0.18)",  borderColor: "rgba(211,150,140,0.6)",  icon: <PartyPopper size={20} /> },
+    curious:     { color: "#1a7f99",  bgColor: "rgba(16,86,102,0.2)",     borderColor: "rgba(16,86,102,0.55)",   icon: <Search size={20} /> },
 };
 
 interface SparkDialogueProps {
@@ -25,7 +26,6 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
     const config = EMOTION_CONFIG[current?.emotion || "happy"];
     const isLast = msgIndex === messages.length - 1;
 
-    // Typewriter effect
     useEffect(() => {
         if (!current) return;
         setDisplayedText("");
@@ -44,7 +44,6 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
 
     const handleClick = useCallback(() => {
         if (isTyping) {
-            // Skip typewriter — show full text
             setDisplayedText(current.text);
             setIsTyping(false);
             return;
@@ -64,9 +63,9 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
                 onClick={handleClick}
                 className="cursor-pointer rounded-3xl border shadow-2xl overflow-hidden transition-all duration-300"
                 style={{
-                    background: `linear-gradient(135deg, ${config.bgColor}, rgba(10,37,64,0.95))`,
+                    background: `linear-gradient(135deg, ${config.bgColor}, rgba(6,26,18,0.96))`,
                     borderColor: config.borderColor,
-                    boxShadow: `0 0 40px ${config.bgColor}`,
+                    boxShadow: `0 0 40px ${config.bgColor}, 0 20px 40px rgba(0,0,0,0.5)`,
                 }}
             >
                 {/* Header */}
@@ -79,7 +78,7 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
                     </div>
                     <div>
                         <p className="text-sm font-black" style={{ color: config.color }}>SPARK</p>
-                        <p className="text-[10px] text-white/30 font-mono uppercase tracking-wider">AI Drone Assistant</p>
+                        <p className="text-[10px] font-mono uppercase tracking-wider" style={{ color: "rgba(247,244,213,0.3)" }}>AI Drone Assistant</p>
                     </div>
                     <div className="ml-auto flex gap-1">
                         {messages.map((_, i) => (
@@ -88,7 +87,7 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
                                 className="h-1.5 rounded-full transition-all"
                                 style={{
                                     width: i === msgIndex ? 16 : 6,
-                                    background: i <= msgIndex ? config.color : "rgba(255,255,255,0.15)",
+                                    background: i <= msgIndex ? config.color : "rgba(247,244,213,0.15)",
                                 }}
                             />
                         ))}
@@ -97,7 +96,7 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
 
                 {/* Body */}
                 <div className="px-5 pb-2 pt-1">
-                    <p className="text-[15px] text-white/90 leading-relaxed min-h-[48px]">
+                    <p className="text-[15px] leading-relaxed min-h-[48px]" style={{ color: "#F7F4D5" }}>
                         {displayedText}
                         {isTyping && <span className="animate-pulse ml-0.5" style={{ color: config.color }}>▊</span>}
                     </p>
@@ -105,7 +104,7 @@ export default function SparkDialogue({ messages, onComplete }: SparkDialoguePro
 
                 {/* Footer */}
                 <div className="px-5 pb-3 flex justify-end">
-                    <p className="text-[11px] font-medium" style={{ color: `${config.color}88` }}>
+                    <p className="text-[11px] font-medium" style={{ color: `${config.color}99` }}>
                         {isTyping ? "Click to skip" : isLast ? "Click to continue →" : "Click for next →"}
                     </p>
                 </div>

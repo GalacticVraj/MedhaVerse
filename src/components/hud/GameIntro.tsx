@@ -179,8 +179,10 @@ export default function GameIntro({ onComplete }: GameIntroProps) {
                     </div>
 
                     {/* Title */}
-                    <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2 text-center"
-                        style={{ color: s.accent, textShadow: `0 0 60px ${s.accent}50, 0 0 120px ${s.accent}20` }}>
+                    <h1
+                        className="title-bubble-white text-5xl md:text-6xl mb-2 text-center"
+                        style={{ textShadow: scene === 0 ? undefined : `0 0 60px ${s.accent}60, -2px -2px 0 rgba(255,255,255,0.9), 2px 2px 0 rgba(131,153,88,0.5), 4px 4px 0 rgba(10,51,35,0.4), 6px 6px 2px rgba(0,0,0,0.3)` }}
+                    >
                         {s.title}
                     </h1>
 
@@ -196,24 +198,21 @@ export default function GameIntro({ onComplete }: GameIntroProps) {
 
                     {/* Button */}
                     <div className="flex justify-center">
-                        <button
-                            onClick={(e) => { e.stopPropagation(); handleNext(); }}
-                            className="group relative px-10 py-3.5 rounded-xl font-black text-sm transition-all duration-300 hover:scale-105"
-                            style={{
-                                background: `linear-gradient(135deg, ${s.accent}25, ${s.accent}10)`,
-                                border: `1px solid ${s.accent}40`,
-                                color: s.accent,
-                                boxShadow: `0 0 40px ${s.accent}15`,
-                            }}
+                        <div
+                            className={`btn-game-wrap ${scene === SCENES.length - 1 ? 'btn-game-wrap-green' : 'btn-game-wrap-blue'}`}
+                            onClick={(e) => e.stopPropagation()}
                         >
-                            <span className="relative z-10 flex items-center gap-2">
+                            <button
+                                onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                                className={`btn-game ${scene === SCENES.length - 1 ? 'btn-green' : 'btn-blue'}`}
+                            >
                                 {scene === SCENES.length - 1 ? (
                                     <><Zap size={18} /> INITIALIZE CONTROL</>
                                 ) : (
                                     <>CONTINUE <ChevronRight size={16} /></>
                                 )}
-                            </span>
-                        </button>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Progress bar */}

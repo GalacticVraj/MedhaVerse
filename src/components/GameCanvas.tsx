@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Sky, Stars } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 
 import Ground from "@/components/city/Ground";
 import Roads, { ROAD_PATHS } from "@/components/city/Roads";
@@ -77,11 +77,86 @@ export default function GameCanvas({
                 shadow-camera-top={60}
                 shadow-camera-bottom={-60}
             />
-            <hemisphereLight args={["#87CEEB", "#1a4a3a", 0.3]} />
+            <hemisphereLight args={["#FFFFFF", "#7CB342", 0.4]} />
 
-            <fog attach="fog" args={["#0a1628", 50, 120]} />
-            <Sky sunPosition={[100, 10, 100]} turbidity={10} rayleigh={3} />
-            <Stars radius={100} depth={50} count={5000} factor={4} fade speed={1} />
+            <color attach="background" args={["#87CEEB"]} />
+            <fog attach="fog" args={["#87CEEB", 50, 150]} />
+            
+            {/* Fluffy sphere-cluster clouds — various shapes and sizes */}
+
+            {/* Cloud 1 — wide flat cumulus, far back left */}
+            <group position={[-45, 32, -55]}>
+                <mesh><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[6, -0.5, 0]}><sphereGeometry args={[6, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[13, -1, 1]}><sphereGeometry args={[5.5, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[19, -0.5, 0]}><sphereGeometry args={[4.5, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[6.5, 3.5, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[12.5, 4, 0]}><sphereGeometry args={[3.5, 16, 16]} /><meshStandardMaterial color="#F5F5FF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 2 — tall puffy, right side */}
+            <group position={[55, 38, -35]}>
+                <mesh><sphereGeometry args={[4.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[5.5, 0, 0]}><sphereGeometry args={[5.5, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+                <mesh position={[11, -0.5, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[5, 4.5, 0]}><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[9, 5, 0]}><sphereGeometry args={[3.5, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[2.5, 5.5, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 3 — small compact, front right */}
+            <group position={[40, 28, 50]}>
+                <mesh><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[4, 0.5, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+                <mesh position={[8, 0, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#F5F5FF" roughness={1.0} /></mesh>
+                <mesh position={[4, 3.5, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 4 — elongated wispy, far right */}
+            <group position={[70, 36, 10]}>
+                <mesh><sphereGeometry args={[3.5, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[5, 0, 0]}><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[11, -0.5, 0]}><sphereGeometry args={[5.5, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[17.5, -0.5, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[22, 0, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[11, 4.5, 0]}><sphereGeometry args={[4.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[16, 4, 0]}><sphereGeometry args={[3.5, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 5 — medium round, directly above */}
+            <group position={[-5, 42, -60]}>
+                <mesh><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[5.5, 0, 0]}><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[11, 0, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[5.5, 4, 0]}><sphereGeometry args={[4.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 6 — small wispy far left */}
+            <group position={[-70, 30, 15]}>
+                <mesh><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[4, 0, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[8.5, -0.5, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+                <mesh position={[4, 3, 0]}><sphereGeometry args={[3, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 7 — big dramatic cloud front left */}
+            <group position={[-60, 35, 45]}>
+                <mesh><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[7, -1, 0]}><sphereGeometry args={[7, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[15, -1, 0.5]}><sphereGeometry args={[6, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+                <mesh position={[22, -0.5, 0]}><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#F5F5FF" roughness={1.0} /></mesh>
+                <mesh position={[7, 5.5, 0]}><sphereGeometry args={[5.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[14, 6, 0]}><sphereGeometry args={[5, 16, 16]} /><meshStandardMaterial color="#F0F4FF" roughness={1.0} /></mesh>
+                <mesh position={[20, 5, 0]}><sphereGeometry args={[4, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
+
+            {/* Cloud 8 — tiny puff, high and distant */}
+            <group position={[20, 52, -80]}>
+                <mesh><sphereGeometry args={[2.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+                <mesh position={[3.5, 0, 0]}><sphereGeometry args={[3.5, 16, 16]} /><meshStandardMaterial color="#F8FBFF" roughness={1.0} /></mesh>
+                <mesh position={[7, 0, 0]}><sphereGeometry args={[2.5, 16, 16]} /><meshStandardMaterial color="#F5F8FF" roughness={1.0} /></mesh>
+                <mesh position={[3.5, 2.5, 0]}><sphereGeometry args={[2.5, 16, 16]} /><meshStandardMaterial color="#FFFFFF" roughness={1.0} /></mesh>
+            </group>
 
             <OrbitControls
                 enableDamping

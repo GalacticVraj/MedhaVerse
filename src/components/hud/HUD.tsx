@@ -15,53 +15,52 @@ interface HUDProps {
 
 export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount, score, level, onMissions, onTutorial, currentObjective }: HUDProps) {
     const congestionLevel = Math.min(vehicleCount / 25, 1);
-    const congestionColor = congestionLevel > 0.7 ? "#FF3366" : congestionLevel > 0.4 ? "#FFD600" : "#00E676";
+    const congestionColor = congestionLevel > 0.7 ? "#D3968C" : congestionLevel > 0.4 ? "#ccc9a0" : "#839958";
 
     return (
         <div className="absolute inset-0 z-40 pointer-events-none">
             <div className="absolute inset-0 flex flex-col justify-between p-4">
+
                 {/* Top row */}
                 <div className="flex items-start justify-between">
                     {/* Left controls */}
-                    <div className="pointer-events-auto flex flex-col gap-2">
-                        <button
-                            onClick={onRushHour}
-                            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl border font-bold text-sm transition-all ${isRushHour
-                                    ? "bg-orange-500/30 border-orange-400/50 text-orange-300 shadow-[0_0_20px_rgba(255,152,0,0.3)]"
-                                    : "bg-black/60 border-white/10 text-white/80 hover:bg-white/10 backdrop-blur-xl"
-                                }`}
-                        >
-                            <Zap size={16} /> Rush Hour
-                        </button>
-
-                        <button
-                            onClick={onEmergency}
-                            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-red-500/20 border border-red-400/30 text-red-300 font-bold text-sm hover:bg-red-500/30 transition-all backdrop-blur-xl shadow-[0_0_15px_rgba(255,51,102,0.15)]"
-                        >
-                            <ShieldAlert size={16} /> 🚨 Emergency
-                        </button>
-                    </div>
-
-                    {/* Center — Score + Level */}
-                    <div className="pointer-events-auto bg-black/60 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/10 text-center">
-                        <div className="flex items-center gap-2 justify-center">
-                            <Trophy size={16} className="text-yellow-400" />
-                            <span className="text-yellow-400 font-black text-lg">{score} XP</span>
+                    <div className="pointer-events-auto flex flex-col gap-3">
+                        {/* Rush Hour */}
+                        <div className={`btn-game-wrap ${isRushHour ? "btn-game-wrap-cream" : "btn-game-wrap-green"}`}>
+                            <button onClick={onRushHour} className={`btn-game ${isRushHour ? "btn-cream" : "btn-green"}`}>
+                                <Zap size={15} />
+                                {isRushHour ? "⚡ Rush Hour ON" : "Rush Hour"}
+                            </button>
                         </div>
-                        <p className="text-[11px] text-white/40 font-mono">Level {level}</p>
+
+                        {/* Emergency */}
+                        <div className="btn-game-wrap btn-game-wrap-red">
+                            <button onClick={onEmergency} className="btn-game btn-red">
+                                <ShieldAlert size={15} />
+                                🚨 Emergency
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Right — empty for signal panel space */}
+                    {/* Center — Score */}
+                    <div className="pointer-events-auto panel-base px-5 py-3 text-center">
+                        <div className="flex items-center gap-2 justify-center">
+                            <Trophy size={16} style={{ color: "#D3968C" }} />
+                            <span className="font-black text-lg" style={{ color: "#D3968C" }}>{score} XP</span>
+                        </div>
+                        <p className="text-[11px] font-mono mt-0.5" style={{ color: "#839958" }}>Level {level}</p>
+                    </div>
+
                     <div className="w-[140px]" />
                 </div>
 
-                {/* Current mission objective */}
+                {/* Mission objective strip */}
                 {currentObjective && (
                     <div className="absolute top-20 left-1/2 -translate-x-1/2 pointer-events-none">
-                        <div className="bg-black/60 backdrop-blur-xl px-5 py-2.5 rounded-2xl border border-cyan-500/30">
+                        <div className="panel-base px-5 py-2.5">
                             <div className="flex items-center gap-2">
-                                <Target size={14} className="text-cyan-400" />
-                                <p className="text-xs text-cyan-300/80 font-medium">{currentObjective}</p>
+                                <Target size={14} style={{ color: "#F7F4D5" }} />
+                                <p className="text-xs font-medium" style={{ color: "#F7F4D5" }}>{currentObjective}</p>
                             </div>
                         </div>
                     </div>
@@ -69,19 +68,19 @@ export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount,
 
                 {/* Bottom row */}
                 <div className="flex items-end justify-between">
-                    {/* Traffic health */}
-                    <div className="pointer-events-auto bg-black/60 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
+                    {/* Traffic congestion */}
+                    <div className="pointer-events-auto panel-base px-4 py-3">
                         <div className="flex items-center gap-3">
-                            <Activity size={16} className="text-white/60" />
+                            <Activity size={16} style={{ color: "#839958" }} />
                             <div>
-                                <div className="w-32 h-2 bg-white/10 rounded-full overflow-hidden">
+                                <div className="w-32 h-2 rounded-full overflow-hidden" style={{ background: "rgba(247,244,213,0.1)" }}>
                                     <div
                                         className="h-full rounded-full transition-all duration-500"
                                         style={{ width: `${congestionLevel * 100}%`, background: congestionColor }}
                                     />
                                 </div>
                                 <div className="flex justify-between mt-1">
-                                    <span className="text-[10px] text-white/30 font-mono">Vehicles: {vehicleCount}</span>
+                                    <span className="text-[10px] font-mono" style={{ color: "rgba(247,244,213,0.35)" }}>Vehicles: {vehicleCount}</span>
                                     <span className="text-[10px] font-bold" style={{ color: congestionColor }}>
                                         {congestionLevel > 0.7 ? "● GRIDLOCK" : congestionLevel > 0.4 ? "● BUSY" : "● CLEAR"}
                                     </span>
@@ -90,12 +89,17 @@ export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount,
                         </div>
                     </div>
 
-                    {/* Controls hint */}
-                    <div className="pointer-events-auto flex items-center gap-2 bg-black/60 backdrop-blur-xl px-4 py-3 rounded-2xl border border-white/10">
-                        <p className="text-xs text-white/40 font-medium">🖱️ Orbit • 🔍 Scroll zoom • 🚦 Click signals</p>
-                        <button onClick={onTutorial} className="ml-2 text-white/40 hover:text-cyan-400 transition-colors" title="Replay Intro">
-                            <HelpCircle size={18} />
-                        </button>
+                    {/* Hints + Help */}
+                    <div className="pointer-events-auto flex items-center gap-3 panel-base px-4 py-3">
+                        <p className="text-xs font-medium" style={{ color: "rgba(247,244,213,0.4)" }}>
+                            🖱️ Orbit &bull; 🔍 Zoom &bull; 🚦 Click signals
+                        </p>
+                        <div className="btn-game-wrap btn-game-wrap-grey">
+                            <button onClick={onTutorial} className="btn-game btn-grey !px-3 !py-2 !text-xs" title="Replay Intro">
+                                <HelpCircle size={14} />
+                                Help
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

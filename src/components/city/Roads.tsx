@@ -26,13 +26,40 @@ function RoadMesh({ position, size, rotation = 0 }: RoadSegment) {
             {/* Road surface */}
             <mesh rotation={[-Math.PI / 2, 0, rotation]} receiveShadow>
                 <planeGeometry args={size} />
-                <meshStandardMaterial color="#333333" roughness={0.8} />
+                <meshStandardMaterial color="#919090" roughness={0.9} />
             </mesh>
-            {/* Center line */}
-            <mesh rotation={[-Math.PI / 2, 0, rotation]} position={[0, 0.005, 0]}>
-                <planeGeometry args={[size[0] * 0.98, 0.15]} />
-                <meshStandardMaterial color="#FFD600" roughness={0.5} emissive="#FFD600" emissiveIntensity={0.1} />
-            </mesh>
+            {/* Center lane dashes */}
+            <group rotation={[-Math.PI / 2, 0, rotation]} position={[0, 0.005, 0]}>
+                {Array.from({ length: Math.floor(size[0] / 2) }).map((_, idx) => (
+                    <mesh key={idx} position={[-size[0] / 2 + idx * 2 + 1, 0, 0]}>
+                        <planeGeometry args={[1, 0.3]} />
+                        <meshStandardMaterial color="#FFFFFF" roughness={1.0} />
+                    </mesh>
+                ))}
+            </group>
+        </group>
+    );
+}
+
+function Crosswalk({ position, rotation = 0 }: { position: [number, number, number], rotation?: number }) {
+    return (
+        <group position={position} rotation={[0, rotation, 0]}>
+            <group position={[0, 0.01, 3.5]}>
+                {Array.from({ length: 7 }).map((_, idx) => (
+                    <mesh key={`cw1-${idx}`} position={[-3 + idx * 1, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                        <planeGeometry args={[0.5, 2]} />
+                        <meshStandardMaterial color="#FFFFFF" roughness={1.0} />
+                    </mesh>
+                ))}
+            </group>
+            <group position={[0, 0.01, -3.5]}>
+                {Array.from({ length: 7 }).map((_, idx) => (
+                    <mesh key={`cw2-${idx}`} position={[-3 + idx * 1, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                        <planeGeometry args={[0.5, 2]} />
+                        <meshStandardMaterial color="#FFFFFF" roughness={1.0} />
+                    </mesh>
+                ))}
+            </group>
         </group>
     );
 }
@@ -43,6 +70,9 @@ export default function Roads() {
             {ROAD_SEGMENTS.map((seg, i) => (
                 <RoadMesh key={i} {...seg} />
             ))}
+            {/* Central intersection crosswalks */}
+            <Crosswalk position={[0, 0, 0]} />
+            <Crosswalk position={[0, 0, 0]} rotation={Math.PI / 2} />
         </group>
     );
 }

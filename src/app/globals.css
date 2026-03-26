@@ -2,16 +2,339 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================
+   MEDHAVERSE — Design System
+   Palette:
+     --dark-green    #0A3323
+     --moss-green    #839958
+     --beige         #F7F4D5
+     --rosy-brown    #D3968C
+     --midnight-green #105666
+   ===================================================== */
+
 :root {
-  --background: #0A2540; /* Dark premium blue */
-  --foreground: #F8FAFC;
+  --dark-green:     #0A3323;
+  --moss-green:     #839958;
+  --beige:          #F7F4D5;
+  --rosy-brown:     #D3968C;
+  --midnight-green: #105666;
+
+  /* Derived tones */
+  --dark-green-deep: #061a12;
+  --moss-green-light: #a3b878;
+  --moss-green-dark:  #5a6b38;
+  --beige-dark:       #ccc9a0;
+  --rosy-brown-light: #e8b5ad;
+  --rosy-brown-dark:  #9e6459;
+  --midnight-green-deep: #073844;
+  --midnight-green-light: #1a7f99;
+
+  --background: var(--dark-green-deep);
+  --foreground: var(--beige);
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--dark-green-deep);
+  font-family: 'Nunito', Arial, sans-serif;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* It's a game/simulation so no scrolling */
+  overflow: hidden;
 }
+
+/* =====================================================
+   BUBBLE / CLOUD TITLE FONT
+   Uses Fredoka + multi-layer text-shadow to create
+   the puffy, 3D cloud look from the reference image.
+   ===================================================== */
+
+.title-bubble {
+  font-family: 'Fredoka', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  /* Layered shadows: offset bottom-right gives 3D depth,
+     white glow gives the inflated puffy cloud look */
+  text-shadow:
+    /* White shine highlights */
+    -2px -2px 0 rgba(255,255,255,0.9),
+    -1px -3px 0 rgba(255,255,255,0.7),
+    /* Core depth layers */
+    2px  2px  0 rgba(180,200,180,0.6),
+    4px  4px  0 rgba(140,160,140,0.4),
+    6px  6px  0 rgba(100,120,100,0.25),
+    8px  8px  0 rgba(60,80,60,0.15),
+    /* Soft outer glow */
+    0 0 20px rgba(255,255,255,0.35),
+    0 0 40px rgba(255,255,255,0.12);
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.5);
+  paint-order: stroke fill;
+}
+
+/* Variant: white cloud text on dark backgrounds (intro screen) */
+.title-bubble-white {
+  font-family: 'Fredoka', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  text-shadow:
+    -2px -2px 0 rgba(255,255,255,0.95),
+    -1px -3px 0 rgba(255,255,255,0.8),
+    2px  2px  0 rgba(200,220,200,0.7),
+    4px  4px  0 rgba(131,153,88,0.5),
+    6px  6px  0 rgba(80,100,60,0.35),
+    8px  8px  2px rgba(10,51,35,0.4),
+    0 0 30px rgba(247,244,213,0.3),
+    0 0 60px rgba(247,244,213,0.1);
+  -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+}
+
+/* Variant: beige/cream for panel titles */
+.title-bubble-beige {
+  font-family: 'Fredoka', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #F7F4D5;
+  text-shadow:
+    -1px -2px 0 rgba(255,255,255,0.8),
+    2px  2px  0 rgba(180,175,120,0.6),
+    4px  4px  0 rgba(131,153,88,0.4),
+    6px  6px  2px rgba(10,51,35,0.3),
+    0 0 20px rgba(247,244,213,0.2);
+  -webkit-text-stroke: 0.8px rgba(255,255,255,0.3);
+}
+
+/* =====================================================
+   GLOSSY GAME BUTTONS
+   ===================================================== */
+
+.btn-game {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border-radius: 50px;
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: transform 0.1s ease, filter 0.1s ease;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Glossy shine overlay */
+.btn-game::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 12px;
+  right: 12px;
+  height: 38%;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.30);
+  pointer-events: none;
+}
+
+.btn-game:active {
+  transform: scale(0.95) translateY(2px);
+  filter: brightness(0.9);
+}
+
+.btn-game:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* --- MOSS GREEN — primary action (Rush Hour, default) --- */
+.btn-green {
+  background: linear-gradient(180deg, #a3b878 0%, #839958 45%, #5a6b38 100%);
+  color: #F7F4D5;
+  text-shadow: 0 2px 3px rgba(0,0,0,0.5);
+  box-shadow:
+    0 6px 0 #3d4d22,
+    0 8px 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  border: 2px solid #4f6030;
+}
+
+/* --- MIDNIGHT GREEN — secondary action (Apply, dialogs) --- */
+.btn-blue {
+  background: linear-gradient(180deg, #1a7f99 0%, #105666 45%, #073844 100%);
+  color: #F7F4D5;
+  text-shadow: 0 2px 3px rgba(0,0,0,0.45);
+  box-shadow:
+    0 6px 0 #041e24,
+    0 8px 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+  border: 2px solid #0d4a58;
+}
+
+/* --- BEIGE — passive/continue action --- */
+.btn-cream {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F7F4D5 45%, #ccc9a0 100%);
+  color: #0A3323;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.6);
+  box-shadow:
+    0 6px 0 #908d6e,
+    0 8px 14px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+  border: 2px solid #839958;
+}
+
+/* --- ROSY BROWN — warning/emergency action --- */
+.btn-red {
+  background: linear-gradient(180deg, #e8b5ad 0%, #D3968C 45%, #9e6459 100%);
+  color: #1a0a08;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+  box-shadow:
+    0 6px 0 #6b3d36,
+    0 8px 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.25);
+  border: 2px solid #b3756b;
+}
+
+/* --- DARK GREEN — quiet/help action --- */
+.btn-grey {
+  background: linear-gradient(180deg, #1a5040 0%, #0A3323 45%, #061a12 100%);
+  color: #F7F4D5;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  box-shadow:
+    0 6px 0 #030d09,
+    0 8px 14px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  border: 2px solid #1a4530;
+}
+
+/* Outer ring wrapper */
+.btn-game-wrap {
+  display: inline-block;
+  padding: 3px;
+  border-radius: 50px;
+}
+
+.btn-game-wrap-green  { background: linear-gradient(180deg, #c8d89a 0%, #3d4d22 100%); box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+.btn-game-wrap-blue   { background: linear-gradient(180deg, #3ab8d8 0%, #041e24 100%); box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+.btn-game-wrap-red    { background: linear-gradient(180deg, #f5cfc9 0%, #6b3d36 100%); box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+.btn-game-wrap-cream  { background: linear-gradient(180deg, #FFFFFF 0%, #838052 100%);  box-shadow: 0 3px 8px rgba(0,0,0,0.3); }
+.btn-game-wrap-grey   { background: linear-gradient(180deg, #3a7060 0%, #030d09 100%);  box-shadow: 0 3px 8px rgba(0,0,0,0.3); }
+
+/* =====================================================
+   CARD SYSTEM — Reference image style
+   Beige interior, thick colored border, rounded corners
+   ===================================================== */
+
+/* Primary card — beige fill with moss-green border */
+.card {
+  background: #F7F4D5;
+  border: 3px solid #839958;
+  border-radius: 20px;
+  box-shadow:
+    0 8px 0 rgba(90,107,56,0.6),
+    0 12px 30px rgba(6,26,18,0.5);
+  overflow: hidden;
+}
+
+/* Card with rosy-brown border (alerts / emergency) */
+.card-rosy {
+  background: #F7F4D5;
+  border: 3px solid #D3968C;
+  border-radius: 20px;
+  box-shadow:
+    0 8px 0 rgba(158,100,89,0.6),
+    0 12px 30px rgba(6,26,18,0.5);
+  overflow: hidden;
+}
+
+/* Card with midnight-green border (info / learning) */
+.card-midnight {
+  background: #F7F4D5;
+  border: 3px solid #105666;
+  border-radius: 20px;
+  box-shadow:
+    0 8px 0 rgba(4,30,36,0.7),
+    0 12px 30px rgba(6,26,18,0.5);
+  overflow: hidden;
+}
+
+/* Card inner section — dark green header strip */
+.card-header {
+  background: #0A3323;
+  padding: 16px 20px;
+  border-bottom: 3px solid #839958;
+}
+
+.card-header-rosy {
+  background: #0A3323;
+  padding: 16px 20px;
+  border-bottom: 3px solid #D3968C;
+}
+
+.card-header-midnight {
+  background: #105666;
+  padding: 16px 20px;
+  border-bottom: 3px solid #105666;
+}
+
+/* Card body */
+.card-body {
+  background: #F7F4D5;
+  padding: 16px 20px;
+}
+
+/* Info sub-card (nested item inside a card) */
+.card-item {
+  background: rgba(10, 51, 35, 0.08);
+  border: 1.5px solid rgba(131, 153, 88, 0.35);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.card-item-midnight {
+  background: rgba(16, 86, 102, 0.1);
+  border: 1.5px solid rgba(16, 86, 102, 0.35);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.card-item-rosy {
+  background: rgba(211, 150, 140, 0.1);
+  border: 1.5px solid rgba(211, 150, 140, 0.35);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+/* Text colors on beige background */
+.text-on-beige        { color: #0A3323; }
+.text-on-beige-muted  { color: rgba(10,51,35,0.55); }
+.text-moss            { color: #5a6b38; }
+.text-midnight        { color: #105666; }
+.text-rosy            { color: #9e6459; }
+
+/* Scrollbar on beige panels */
+.card ::-webkit-scrollbar,
+.card-rosy ::-webkit-scrollbar,
+.card-midnight ::-webkit-scrollbar { width: 4px; }
+.card ::-webkit-scrollbar-track,
+.card-rosy ::-webkit-scrollbar-track,
+.card-midnight ::-webkit-scrollbar-track { background: rgba(10,51,35,0.08); }
+.card ::-webkit-scrollbar-thumb,
+.card-rosy ::-webkit-scrollbar-thumb,
+.card-midnight ::-webkit-scrollbar-thumb { background: rgba(131,153,88,0.5); border-radius: 4px; }
+
+/* Keep old panel-base/panel-header as aliases for compat */
+.panel-base   { background: rgba(10,51,35,0.88); backdrop-filter: blur(20px); border: 1px solid rgba(131,153,88,0.35); border-radius: 20px; box-shadow: 0 0 40px rgba(16,86,102,0.2); }
+.panel-header { background: linear-gradient(135deg, rgba(16,86,102,0.4), rgba(10,51,35,0.6)); border-bottom: 1px solid rgba(131,153,88,0.25); }
+
+/* =====================================================
+   SCROLLBAR STYLING
+   ===================================================== */
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: rgba(10,51,35,0.3); }
+::-webkit-scrollbar-thumb { background: rgba(131,153,88,0.5); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(131,153,88,0.8); }
