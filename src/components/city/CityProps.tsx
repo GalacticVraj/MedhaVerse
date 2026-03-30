@@ -1,115 +1,68 @@
 "use client";
 
 export default function StreetLamp({ position }: { position: [number, number, number] }) {
-    // Shared dark wrought-iron material
-    const ironMaterial = <meshStandardMaterial color="#111" metalness={0.8} roughness={0.3} />;
+    // Shared dark grey blocky material
+    const ironMaterial = <meshStandardMaterial color="#2B2B2B" roughness={0.8} />;
     
     return (
         <group position={position}>
-            {/* ------ BASE ------ */}
+            {/* ------ BASE BLOCK ------ */}
             <mesh position={[0, 0.2, 0]} castShadow>
-                <cylinderGeometry args={[0.3, 0.4, 0.4, 16]} />
+                <boxGeometry args={[0.5, 0.4, 0.5]} />
                 {ironMaterial}
             </mesh>
-            <mesh position={[0, 0.6, 0]} castShadow>
-                <cylinderGeometry args={[0.18, 0.25, 0.4, 16]} />
-                {ironMaterial}
-            </mesh>
-            <mesh position={[0, 1.0, 0]} castShadow>
-                <cylinderGeometry args={[0.12, 0.18, 0.4, 16]} />
+            <mesh position={[0, 0.55, 0]} castShadow>
+                <boxGeometry args={[0.3, 0.3, 0.3]} />
                 {ironMaterial}
             </mesh>
             
             {/* ------ TALL POLE ------ */}
-            <mesh position={[0, 3.2, 0]} castShadow>
-                <cylinderGeometry args={[0.08, 0.12, 4.0, 16]} />
-                {ironMaterial}
-            </mesh>
-            
-            {/* ------ DECORATIVE COLLARS ------ */}
-            <mesh position={[0, 1.8, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                <torusGeometry args={[0.12, 0.04, 16, 32]} />
-                {ironMaterial}
-            </mesh>
-            <mesh position={[0, 3.8, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                <torusGeometry args={[0.1, 0.03, 16, 32]} />
-                {ironMaterial}
-            </mesh>
-            <mesh position={[0, 4.8, 0]} rotation={[Math.PI / 2, 0, 0]} castShadow>
-                <torusGeometry args={[0.09, 0.03, 16, 32]} />
+            <mesh position={[0, 2.7, 0]} castShadow>
+                <boxGeometry args={[0.15, 4.0, 0.15]} />
                 {ironMaterial}
             </mesh>
             
             {/* ------ TOP FINIAL ------ */}
-            <mesh position={[0, 5.5, 0]} castShadow>
-                <sphereGeometry args={[0.08, 16, 16]} />
+            <mesh position={[0, 4.8, 0]} castShadow>
+                <boxGeometry args={[0.2, 0.2, 0.2]} />
                 {ironMaterial}
             </mesh>
 
-            {/* ------ ORNATE ARM (SHEPHERD'S HOOK) ------ */}
-            {/* Main Arch connecting pole x=0 to lantern x=1.6 */}
-            <mesh position={[0.8, 4.8, 0]} castShadow>
-                <torusGeometry args={[0.8, 0.04, 16, 32, Math.PI]} />
+            {/* ------ BLOCKY ARM ------ */}
+            <mesh position={[0.6, 4.5, 0]} castShadow>
+                <boxGeometry args={[1.2, 0.1, 0.1]} />
                 {ironMaterial}
             </mesh>
             
-            {/* Inner Scroll Curl 1 */}
-            <mesh position={[0.3, 4.5, 0]} rotation={[0, 0, Math.PI * 0.7]} castShadow>
-                <torusGeometry args={[0.25, 0.03, 16, 32, Math.PI * 1.5]} />
+            {/* Diagonal Bracket */}
+            <mesh position={[0.3, 4.25, 0]} rotation={[0, 0, Math.PI / 4]} castShadow>
+                <boxGeometry args={[0.8, 0.08, 0.08]} />
                 {ironMaterial}
             </mesh>
 
-            {/* Outer Scroll Curl 2 */}
-            <mesh position={[1.1, 4.7, 0]} rotation={[0, 0, -Math.PI * 0.2]} castShadow>
-                <torusGeometry args={[0.15, 0.02, 16, 32, Math.PI * 1.5]} />
-                {ironMaterial}
-            </mesh>
-
-            {/* ------ HANGING LANTERN ------ */}
-            {/* Lantern Assembly hangs below the arm at x=1.6 */}
-            <group position={[1.6, 4.25, 0]}>
-                {/* Connecting rod Drop */}
-                <mesh position={[0, 0.45, 0]} castShadow>
-                    <cylinderGeometry args={[0.02, 0.02, 0.2]} />
-                    {ironMaterial}
-                </mesh>
-                
-                {/* Lantern Pointed Roof */}
+            {/* ------ HANGING LANTERN BOX ------ */}
+            <group position={[1.1, 4.15, 0]}>
+                {/* Connecting rod */}
                 <mesh position={[0, 0.2, 0]} castShadow>
-                    <cylinderGeometry args={[0.01, 0.35, 0.3, 6]} />
-                    {ironMaterial}
-                </mesh>
-                {/* Roof Finial */}
-                <mesh position={[0, 0.4, 0]} castShadow>
-                    <sphereGeometry args={[0.03]} />
-                    {ironMaterial}
-                </mesh>
-
-                {/* Lantern Glowing Glass Body */}
-                <mesh position={[0, -0.1, 0]}>
-                    <cylinderGeometry args={[0.3, 0.18, 0.45, 6]} />
-                    <meshStandardMaterial color="#FFF59D" emissive="#FF9800" emissiveIntensity={3.5} />
-                </mesh>
-
-                {/* Thick Frame Top Edge */}
-                <mesh position={[0, 0.14, 0]} castShadow>
-                    <cylinderGeometry args={[0.32, 0.32, 0.05, 6]} />
+                    <boxGeometry args={[0.05, 0.4, 0.05]} />
                     {ironMaterial}
                 </mesh>
                 
-                {/* Thick Frame Bottom Edge */}
-                <mesh position={[0, -0.34, 0]} castShadow>
-                    <cylinderGeometry args={[0.2, 0.2, 0.05, 6]} />
+                {/* Lantern Roof */}
+                <mesh position={[0, 0.0, 0]} castShadow>
+                    <boxGeometry args={[0.4, 0.1, 0.4]} />
                     {ironMaterial}
                 </mesh>
 
-                {/* Lantern Bottom Pointed Taper */}
-                <mesh position={[0, -0.45, 0]} castShadow>
-                    <cylinderGeometry args={[0.18, 0.01, 0.2, 6]} />
-                    {ironMaterial}
+                {/* Lantern Glowing Body */}
+                <mesh position={[0, -0.2, 0]}>
+                    <boxGeometry args={[0.3, 0.3, 0.3]} />
+                    <meshStandardMaterial color="#FFF59D" emissive="#FFB74D" emissiveIntensity={3.0} />
                 </mesh>
-                <mesh position={[0, -0.58, 0]} castShadow>
-                    <coneGeometry args={[0.03, 0.1, 8]} />
+                
+                {/* Lantern Bottom */}
+                <mesh position={[0, -0.4, 0]} castShadow>
+                    <boxGeometry args={[0.4, 0.1, 0.4]} />
                     {ironMaterial}
                 </mesh>
             </group>
@@ -118,95 +71,70 @@ export default function StreetLamp({ position }: { position: [number, number, nu
 }
 
 export function Tree({ position }: { position: [number, number, number] }) {
-    // Deterministic random based on position so it doesn't change on re-render
+    // Deterministic random based on position
     const seed = Math.abs(Math.floor(position[0] * 7 + position[2] * 13));
-    const typeIndex = seed % 5;
+    const typeIndex = seed % 4;
     const isAutumn = seed % 10 === 0; // 10% chance of an autumn tree
     
-    const leafColor = isAutumn ? "#FDD835" : (seed % 2 === 0 ? "#7CB342" : "#4CAF50");
-    const trunkColor = "#8D6E63";
+    const leafColor = isAutumn ? "#F4B41A" : (seed % 2 === 0 ? "#6BA32A" : "#4A8F29");
+    const trunkColor = "#6A4A3C";
 
     const Leaves = () => {
         switch(typeIndex) {
-            case 0: // Pine tree (stacked cones)
+            case 0: // Tall Pine tree (stacked boxes)
                 return (
                     <group>
-                        <mesh position={[0, 2.0, 0]} castShadow>
-                            <coneGeometry args={[1.5, 2.0, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 1.8, 0]} castShadow>
+                            <boxGeometry args={[1.6, 1.6, 1.6]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
-                        <mesh position={[0, 3.2, 0]} castShadow>
-                            <coneGeometry args={[1.2, 1.8, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 3.0, 0]} castShadow>
+                            <boxGeometry args={[1.2, 1.2, 1.2]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
-                        <mesh position={[0, 4.4, 0]} castShadow>
-                            <coneGeometry args={[0.8, 1.5, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 4.0, 0]} castShadow>
+                            <boxGeometry args={[0.8, 0.8, 0.8]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
                     </group>
                 );
-            case 1: // Large Bubble Cluster Tree
+            case 1: // Asymmetric Blocky Tree
                 return (
                     <group>
-                        <mesh position={[0, 3.2, 0]} castShadow>
-                            <sphereGeometry args={[1.4, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 2.5, 0]} castShadow>
+                            <boxGeometry args={[1.5, 1.5, 1.5]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
-                        <mesh position={[0.8, 3.0, 0.5]} castShadow>
-                            <sphereGeometry args={[0.8, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0.6, 2.2, 0.4]} castShadow>
+                            <boxGeometry args={[1.0, 1.0, 1.0]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
-                        <mesh position={[-0.7, 2.8, -0.6]} castShadow>
-                            <sphereGeometry args={[0.9, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
-                        </mesh>
-                        <mesh position={[0.2, 4.2, -0.4]} castShadow>
-                            <sphereGeometry args={[0.7, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[-0.5, 3.2, -0.3]} castShadow>
+                            <boxGeometry args={[1.2, 1.2, 1.2]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
                     </group>
                 );
-            case 2: // Columnar Stacked Bubble Tree
+            case 2: // Flat Top Canopy Tree
                 return (
                     <group>
-                        <mesh position={[0, 2.2, 0]} castShadow>
-                            <sphereGeometry args={[1.1, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 2.8, 0]} castShadow>
+                            <boxGeometry args={[2.5, 0.8, 2.5]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
-                        <mesh position={[0, 3.3, 0]} castShadow>
-                            <sphereGeometry args={[0.9, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
-                        </mesh>
-                        <mesh position={[0, 4.2, 0]} castShadow>
-                            <sphereGeometry args={[0.7, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 3.4, 0]} castShadow>
+                            <boxGeometry args={[1.5, 0.6, 1.5]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
                     </group>
                 );
-            case 3: // Wide Flat Bubble Tree
-                return (
-                    <group>
-                        <mesh position={[0, 2.8, 0]} castShadow scale={[1.4, 0.8, 1.4]}>
-                            <sphereGeometry args={[1.2, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
-                        </mesh>
-                        <mesh position={[0, 3.8, 0]} castShadow scale={[1.2, 0.8, 1.2]}>
-                            <sphereGeometry args={[0.8, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
-                        </mesh>
-                    </group>
-                );
-            case 4: // Simple Classic Round Tree
+            case 3: // Simple Cube Tree
             default:
                 return (
                     <group>
-                        <mesh position={[0, 3.2, 0]} castShadow>
-                            <sphereGeometry args={[1.5, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
-                        </mesh>
-                        <mesh position={[0.7, 2.5, 0]} castShadow>
-                            <sphereGeometry args={[0.6, 16, 16]} />
-                            <meshStandardMaterial color={leafColor} roughness={0.8} />
+                        <mesh position={[0, 2.8, 0]} castShadow>
+                            <boxGeometry args={[1.8, 1.8, 1.8]} />
+                            <meshStandardMaterial color={leafColor} roughness={0.9} />
                         </mesh>
                     </group>
                 );
@@ -217,16 +145,16 @@ export function Tree({ position }: { position: [number, number, number] }) {
         <group position={position}>
             {/* Trunk */}
             <mesh position={[0, 1.0, 0]} castShadow>
-                <cylinderGeometry args={[0.15, 0.25, 2.0, 12]} />
-                <meshStandardMaterial color={trunkColor} roughness={0.9} />
+                <boxGeometry args={[0.3, 2.0, 0.3]} />
+                <meshStandardMaterial color={trunkColor} roughness={1.0} />
             </mesh>
-            {/* Root flares Base */}
-            <mesh position={[0, 0.2, 0]} castShadow>
-                <coneGeometry args={[0.45, 0.4, 8]} />
-                <meshStandardMaterial color={trunkColor} roughness={0.9} />
-            </mesh>
-
-            {/* Tree Leaves generated by style */}
+            {/* Planter Box / Base */}
+            {seed % 3 === 0 && (
+                <mesh position={[0, 0.2, 0]} castShadow>
+                    <boxGeometry args={[0.8, 0.4, 0.8]} />
+                    <meshStandardMaterial color="#8B8B8B" roughness={0.9} />
+                </mesh>
+            )}
             <Leaves />
         </group>
     );

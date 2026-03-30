@@ -30,7 +30,7 @@ export default function Home() {
     const [allConfigured, setAllConfigured] = useState(false);
     const [showBriefingDialogue, setShowBriefingDialogue] = useState(false);
 
-    const vehicleCount = isRushHour ? 20 : 8;
+    const vehicleCount = isRushHour ? 80 : 35;
 
     const checkMissionCompletion = useCallback((context: {
         configured?: boolean; shortGreen?: boolean; emergency?: boolean;

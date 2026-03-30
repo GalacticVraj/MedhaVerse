@@ -7,7 +7,7 @@ export default function Ground() {
 
     return (
         <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.05, 0]} receiveShadow>
-            <planeGeometry args={[200, 200]} />
+            <planeGeometry args={[800, 800]} />
             <meshStandardMaterial color="#558B2F" roughness={1.0} />
         </mesh>
     );

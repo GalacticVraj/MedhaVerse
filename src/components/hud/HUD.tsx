@@ -14,7 +14,7 @@ interface HUDProps {
 }
 
 export default function HUD({ onRushHour, onEmergency, isRushHour, vehicleCount, score, level, onMissions, onTutorial, currentObjective }: HUDProps) {
-    const congestionLevel = Math.min(vehicleCount / 25, 1);
+    const congestionLevel = Math.min(vehicleCount / 120, 1);
     const congestionColor = congestionLevel > 0.7 ? "#D3968C" : congestionLevel > 0.4 ? "#ccc9a0" : "#839958";
 
     return (
